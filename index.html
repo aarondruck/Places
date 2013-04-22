@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Places</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+	
+		//start searching for a place
+		getLocation();
+	
+		function getLocation()
+		  {
+		  if (navigator.geolocation)
+		    {
+		    navigator.geolocation.getCurrentPosition(showPosition,showError);
+		    }
+		  else{x.innerHTML='Geolocation is not supported by this browser.';}
+		  }
+
+		function showPosition(position)
+		  {
+		  var latlon=position.coords.latitude+','+position.coords.longitude;
+		  var latitude = position.coords.latitude;
+		  var longitude = position.coords.longitude;
+
+		  var img_url='http://maps.googleapis.com/maps/api/staticmap?center='
+		  +latlon+'&zoom=14&size=400x300&sensor=false';
+		  document.getElementById('map_canvas').innerHTML='<img src=http://maps.googleapis.com/maps/api/staticmap?center='+latlon+'&zoom=14&size=400x300&sensor=false>';
+
+		  //refresh to a blank list
+		  $('ul.places-nearby li').html("");
+			$.getJSON('https://api.foursquare.com/v2/venues/search?ll='+latitude+','+longitude+'&query=bar&limit=10&client_id=2POUFAUU4ZBJ2MTDOY3S2YHR2NIT52FYW0LUTPHBMNTJFJNQ&client_secret=YFDZI1YWV3ZI5S5SPM2DZJEQIEBPIDJ5XFZBWTIKIQZVQNYM&v=20120101',
+		    function(data) {
+		       $.each(data.response.venues, function(i,venues){
+					
+					//also create localStorage objects here for each place
+					//1. with a unique url with their name without spaces
+					var place = {};
+					place.name = venues.name;
+					place.id = venues.id;
+					place.HTML = "<body>asdf</body>";
+					localStorage.setItem( 'newPlace' + venues.id, JSON.stringify(place));
+			
+					//add places to the list
+		            content = '<li><a href="#'+ venues.id +'">' + venues.name + '</a></li>';
+		            $(content).appendTo('ul.places-nearby');
+					$('ul.places-nearby').listview('refresh');
+					
+					
+				
+					
+		       });
+			});
+
+
+		  }
+
+		function showError(error)
+		  {
+		  switch(error.code) 
+		    {
+		    case error.PERMISSION_DENIED:
+		      x.innerHTML='User denied the request for Geolocation.'
+		      break;
+		    case error.POSITION_UNAVAILABLE:
+		      x.innerHTML='Location information is unavailable.'
+		      break;
+		    case error.TIMEOUT:
+		      x.innerHTML='The request to get user location timed out.'
+		      break;
+		    case error.UNKNOWN_ERROR:
+		      x.innerHTML='An unknown error occurred.'
+		      break;
+		    }
+		  }
+	</script>
+	
+	
+</head>
+<body>
+
+<!-- Start of Places page -->
+<div data-role="page" id="places">
+
+	<div data-role="header" data-position="fixed">
+		<h1>Places</h1>
+		<a href="#" data-icon="refresh" class="" onclick='getLocation()'>Find</a>
+	    
+	</div><!-- /header -->
+
+	<div data-role="content">
+		
+		<ul class="places-nearby" data-role="listview" data-filter="true" data-filter-reveal="false" data-filter-placeholder="Choose a favorite place">
+			<div id="map_canvas" style="width:250px;height:250px"></div>	
+
+			<!-- <li><a href="#judah" data-transition="slide">Judah</a></li> -->
+			
+			<script type="text/javascript" charset="utf-8">
+				//onclick() on the link, create the new Places page here
+				
+			</script>
+			
+
+		</ul>
+		
+	</div><!-- /content -->
+
+	<div data-role="footer" data-id="places" data-position="fixed" class="nav-glyphish-example">
+		<div data-role="navbar" class="nav-glyphish-example">
+			<ul>
+				<li><a href="#places" class="ui-btn-active ui-state-persist" id="beer" data-icon="custom">Places</a></li>
+				<li><a href="#favorites" data-transition="none" id="beer" data-icon="custom">My favorites</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer -->
+	
+</div><!-- /page -->
+
+
+
+
+
+<!-- Start of Favorites page -->
+<div data-role="page" id="favorites">
+
+	<div data-role="header" data-position="fixed">
+		<h1>My favorites</h1>
+	    <div data-role="navbar">
+	        <ul>
+	            <li><a href="#" class="ui-btn-active ui-state-persist">Now</a></li>
+	            <li><a href="#favorites-all" data-transition="none">All</a></li>
+	        </ul>
+	    </div><!-- /navbar -->
+	</div><!-- /header -->
+
+	<div data-role="content">
+		
+		<ul data-role="listview">
+			<div id="map_canvas" style="width:250px;height:250px"><iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=230+judah+st&amp;aq=&amp;sll=37.7577,-122.4376&amp;sspn=0.163946,0.363579&amp;ie=UTF8&amp;hq=&amp;hnear=230+Judah+St,+San+Francisco,+California+94122&amp;ll=37.762489,-122.464668&amp;spn=0.010246,0.022724&amp;t=m&amp;z=14&amp;iwloc=A&amp;output=embed"></iframe></div>
+		    <li><a href="#judah" data-transition="slide">Judah</a></li>
+		    <li><a href="#">Audi</a></li>
+		</ul>
+		
+	</div><!-- /content -->
+
+	<div data-role="footer" data-id="favorites" data-position="fixed" class="nav-glyphish-example">
+		<div data-role="navbar" class="nav-glyphish-example">
+			<ul>
+				<li><a href="#places" data-transition="none" id="beer" data-icon="custom">Places</a></li>
+				<li><a href="#favorites" class="ui-btn-active ui-state-persist" id="beer" data-icon="custom">My favorites</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<!-- Start of Favorites ALL page -->
+<div data-role="page" id="favorites-all">
+
+	<div data-role="header" data-position="fixed">
+		<h1>My favorites</h1>
+	    <div data-role="navbar">
+	        <ul>
+	            <li><a href="#favorites" data-transition="none">Now</a></li>
+	            <li><a href="#" class="ui-btn-active ui-state-persist">All</a></li>
+	        </ul>
+	    </div><!-- /navbar -->
+	</div><!-- /header -->
+
+	<div data-role="content">
+		
+		<ul data-role="listview" data-filter="true" data-filter-placeholder="Search all my favorites..." data-inset="false">
+			
+			<script type="text/javascript" charset="utf-8">
+				//$("li").html(localStorage.getItem("name"));
+				
+			</script>
+			
+		    <li id="all-my-favorites"><a href="#">Apple</a></li>
+		</ul>
+		
+	</div><!-- /content -->
+
+	<div data-role="footer" data-id="favorites" data-position="fixed" class="nav-glyphish-example">
+		<div data-role="navbar" class="nav-glyphish-example">
+			<ul>
+				<li><a href="#places" data-transition="none" id="beer" data-icon="custom">Places</a></li>
+				<li><a href="#favorites" class="ui-btn-active ui-state-persist" id="beer" data-icon="custom">My favorites</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+<!-- Start of Judah page -->
+<div data-role="page" id="judah">
+
+	<div data-role="header" data-position="fixed" >
+		<a href="#" data-icon="arrow-l" data-iconpos="left" data-rel="back" data-transition="slide" data-direction="reverse">Back</a>
+		<h1>Judah</h1>
+	    <a href="#" data-icon="check" class="" id="save-btn">Save</a>
+		
+		<script type="text/javascript" charset="utf-8">
+		
+			// $("#save-btn").on( "click", function( event ){
+			// 	alert("Saved to your favorites!");	
+			// 	
+			// 	var car = {};
+			// 	car.wheels = 4;
+			// 	car.doors = 2;
+			// 	car.sound = 'vroom';
+			// 	car.name = 'Lightning McQueen';
+			// 	
+			// 	console.log( car );
+			// 	localStorage.setItem( 'car', JSON.stringify(car) );
+			// 	console.log( JSON.parse( localStorage.getItem( 'car' ) ) );
+			// 	
+			// 	for (var i = 0; i < localStorage.length; i++){
+			// 	    $('li').append(localStorage.getItem(localStorage.key(i)));
+			// 	}
+			// 	
+			// });
+			
+		</script>
+		
+	</div><!-- /header -->
+
+	<div data-role="content">
+	
+	<div class="ui-grid-a">
+	    <div class="ui-block-a">
+			<div style="height:100px">
+				<p><span class="locationName">Judah Bar</span><br/><span class="locationType">Bar</span> <span class="locationPrice">$</span></p>
+			</div>
+		</div>
+	    <div class="ui-block-b">
+			<div style="height:100px">
+				<p>Best at<br/>
+					<span class="locationTime">4pm</span> on 
+					<span class="locationDay">Tuesdays</span>
+				</p>
+			</div>
+		</div>
+	</div><!-- /grid-a -->
+	
+	<div id="map_canvas" style="width:250px;height:250px"><iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=230+judah+st&amp;aq=&amp;sll=37.7577,-122.4376&amp;sspn=0.163946,0.363579&amp;ie=UTF8&amp;hq=&amp;hnear=230+Judah+St,+San+Francisco,+California+94122&amp;ll=37.762489,-122.464668&amp;spn=0.010246,0.022724&amp;t=m&amp;z=14&amp;iwloc=A&amp;output=embed"></iframe></div>
+	
+		
+	</div><!-- /content -->
+
+
+</div><!-- /page -->
+
+</body>
+</html>
