@@ -8,12 +8,13 @@
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
 	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
-	
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    
 	<script type="text/javascript" charset="utf-8">
 	
 		//start searching for a place
 		getLocation();
-	
+		
 		function getLocation()
 		  {
 		  if (navigator.geolocation)
@@ -31,19 +32,38 @@
 
 		  var img_url='http://maps.googleapis.com/maps/api/staticmap?center='
 		  +latlon+'&zoom=14&size=400x300&sensor=false';
+				
 		  document.getElementById('map_canvas').innerHTML='<img src=http://maps.googleapis.com/maps/api/staticmap?center='+latlon+'&zoom=14&size=400x300&sensor=false>';
 
 		  //refresh to a blank list
 		  $('ul.places-nearby li').html("");
+		
 			$.getJSON('https://api.foursquare.com/v2/venues/search?ll='+latitude+','+longitude+'&query=bar&limit=10&client_id=2POUFAUU4ZBJ2MTDOY3S2YHR2NIT52FYW0LUTPHBMNTJFJNQ&client_secret=YFDZI1YWV3ZI5S5SPM2DZJEQIEBPIDJ5XFZBWTIKIQZVQNYM&v=20120101',
 		    function(data) {
 		       $.each(data.response.venues, function(i,venues){
+					
+					//create/append html with new pages and information
+								
+					var date = new Date();
+					var weekday=new Array(7);
+					weekday[0]="Sunday";
+					weekday[1]="Monday";
+					weekday[2]="Tuesday";
+					weekday[3]="Wednesday";
+					weekday[4]="Thursday";
+					weekday[5]="Friday";
+					weekday[6]="Saturday";
+					var day = weekday[date.getDay()];
+					
+					var hour = date.getHours();
 					
 					//also create localStorage objects here for each place
 					//1. with a unique url with their name without spaces
 					var place = {};
 					place.name = venues.name;
 					place.id = venues.id;
+					place.dayOfWeek = day;
+					place.hourOfDay = hour;
 					place.HTML = "<body>asdf</body>";
 					localStorage.setItem( 'newPlace' + venues.id, JSON.stringify(place));
 			
@@ -52,8 +72,6 @@
 		            $(content).appendTo('ul.places-nearby');
 					$('ul.places-nearby').listview('refresh');
 					
-					
-				
 					
 		       });
 			});
@@ -103,6 +121,7 @@
 			
 			<script type="text/javascript" charset="utf-8">
 				//onclick() on the link, create the new Places page here
+			
 				
 			</script>
 			
