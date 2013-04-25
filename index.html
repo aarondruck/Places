@@ -10,103 +10,6 @@
 	<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     
-	<script type="text/javascript" charset="utf-8">	
-	
-		//start searching for a place
-		getLocation();
-		
-		function getLocation()
-		  {
-		  if (navigator.geolocation)
-		    {
-		    navigator.geolocation.getCurrentPosition(showPosition,showError);
-		    }
-		  else{x.innerHTML='Geolocation is not supported by this browser.';}
-		  }
-
-		function showPosition(position)
-		  {
-		  var latlon=position.coords.latitude+','+position.coords.longitude;
-		  var latitude = position.coords.latitude;
-		  var longitude = position.coords.longitude;
-
-		  var img_url='http://maps.googleapis.com/maps/api/staticmap?center='
-		  +latlon+'&zoom=14&size=400x300&sensor=false';
-				
-		  document.getElementById('map_canvas').innerHTML='<img src=http://maps.googleapis.com/maps/api/staticmap?center='+latlon+'&zoom=14&size=400x300&sensor=false>';
-
-		  //refresh to a blank list
-		  $('ul.places-nearby li').html("");
-		
-			$.getJSON('https://api.foursquare.com/v2/venues/search?ll='+latitude+','+longitude+'&query=bar&limit=10&client_id=2POUFAUU4ZBJ2MTDOY3S2YHR2NIT52FYW0LUTPHBMNTJFJNQ&client_secret=YFDZI1YWV3ZI5S5SPM2DZJEQIEBPIDJ5XFZBWTIKIQZVQNYM&v=20120101',
-		    function(data) {
-		       $.each(data.response.venues, function(i,venues){
-					
-					//create/append html with new pages and information
-								
-					var date = new Date();
-					var weekday=new Array(7);
-					weekday[0]="Sunday";
-					weekday[1]="Monday";
-					weekday[2]="Tuesday";
-					weekday[3]="Wednesday";
-					weekday[4]="Thursday";
-					weekday[5]="Friday";
-					weekday[6]="Saturday";
-					var day = weekday[date.getDay()];
-					
-					var hour = date.getHours();
-					
-					//also create localStorage objects here for each place
-					//1. with a unique url with their name without spaces
-					var place = {};
-					place.name = venues.name;
-					place.id = venues.id;
-					place.dayOfWeek = day;
-					place.hourOfDay = hour;
-					place.HTML = "<body>asdf</body>";
-					localStorage.setItem( 'newPlace' + venues.id, JSON.stringify(place));
-			
-					//add places to the list
-		      content = '<li><a href="#'+ venues.id +'">' + venues.name + '</a></li>';
-		      $(content).appendTo('ul.places-nearby');
-					$('ul.places-nearby').listview('refresh');
-					
-					
-					
-					
-					
-		       });
-			});
-
-
-		  }
-
-		function showError(error)
-		  {
-		  switch(error.code) 
-		    {
-		    case error.PERMISSION_DENIED:
-		      x.innerHTML='User denied the request for Geolocation.'
-		      break;
-		    case error.POSITION_UNAVAILABLE:
-		      x.innerHTML='Location information is unavailable.'
-		      break;
-		    case error.TIMEOUT:
-		      x.innerHTML='The request to get user location timed out.'
-		      break;
-		    case error.UNKNOWN_ERROR:
-		      x.innerHTML='An unknown error occurred.'
-		      break;
-		    }
-		  }
-		  
-		  
-		  
-		  
-	</script>
-	
-	
 </head>
 <body id="page_body">
 
@@ -115,23 +18,15 @@
 
 	<div data-role="header" data-position="fixed">
 		<h1>Places</h1>
-		<a href="#" data-icon="refresh" class="" onclick='getLocation()'>Find</a>
+		<a href="#" data-icon="refresh" onclick='getLocation()' class="ui-btn-right">Refresh</a>
 	    
 	</div><!-- /header -->
 
 	<div data-role="content">
 		
-		<ul class="places-nearby" data-role="listview" data-filter="true" data-filter-reveal="false" data-filter-placeholder="Choose a favorite place">
-			<div id="map_canvas" style="width:250px;height:250px"></div>	
-
-			<!-- <li><a href="#judah" data-transition="slide">Judah</a></li> -->
-			
-			<script type="text/javascript" charset="utf-8">
-				//onclick() on the link, create the new Places page here
-			
-				
-			</script>
-			
+		<div id="map_canvas" style="width:250px;height:250px"></div>	
+		
+		<ul id="resultsList" data-role="listview" data-filter="true" data-filter-reveal="false" data-filter-placeholder="Choose a favorite place">			
 
 		</ul>
 		
@@ -147,10 +42,6 @@
 	</div><!-- /footer -->
 	
 </div><!-- /page -->
-
-
-
-
 
 <!-- Start of Favorites page -->
 <div data-role="page" id="favorites">
@@ -221,6 +112,131 @@
 		</div><!-- /navbar -->
 	</div><!-- /footer -->
 </div><!-- /page -->
+
+
+<!-- display -->
+<div data-role="page" id="display">
+    <div data-role="header">
+      <a data-role="button" data-rel="back" data-icon="back">Back</a>
+         <h3>Name Goes Here</h3>
+      <a href="#" data-icon="check" class="" id="save-btn">Save</a>
+    </div>
+    <div data-role="content">
+      
+        <div class="ui-grid-a">
+      	    <div class="ui-block-a">
+      			<div style="height:100px">
+      				<p><span class="locationName">Judah Bar</span><br/><div id="definition">Location goes here</div> <span class="locationPrice">$</span></p>
+      			</div>
+      		</div>
+      	    <div class="ui-block-b">
+      			<div style="height:100px">
+      				<p>Your favorite on<br/>
+      					<span id="dayofweek"></span>s around 
+      					<span id="timeofday"></span>
+      				</p>
+      			</div>
+      		</div>
+      	</div><!-- /grid-a -->
+
+      	<div id="map_canvas" style="width:250px;height:250px"><iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=230+judah+st&amp;aq=&amp;sll=37.7577,-122.4376&amp;sspn=0.163946,0.363579&amp;ie=UTF8&amp;hq=&amp;hnear=230+Judah+St,+San+Francisco,+California+94122&amp;ll=37.762489,-122.464668&amp;spn=0.010246,0.022724&amp;t=m&amp;z=14&amp;iwloc=A&amp;output=embed"></iframe></div>
+      
+      
+        
+    </div>
+    
+    <script type="text/javascript" charset="utf-8">
+      var date = new Date();
+      var weekday=new Array(7);
+			weekday[0]="Sunday";
+			weekday[1]="Monday";
+			weekday[2]="Tuesday";
+			weekday[3]="Wednesday";
+			weekday[4]="Thursday";
+			weekday[5]="Friday";
+			weekday[6]="Saturday";
+			var day = weekday[date.getDay()];
+			$("#dayofweek").html(day);
+
+			var hour = date.getHours();
+			$("#timeofday").html(hour);
+			
+    </script>
+    
+</div>
+
+
+<script>
+
+  //start searching for a place
+	getLocation();
+	
+	function getLocation()
+	  {
+	  if (navigator.geolocation)
+	    {
+	    navigator.geolocation.getCurrentPosition(showPosition,showError);
+	    }
+	  else{x.innerHTML='Geolocation is not supported by this browser.';}
+	  }
+
+
+	function showPosition(position)
+	  {
+	  var latlon=position.coords.latitude+','+position.coords.longitude;
+	  var latitude = position.coords.latitude;
+	  var longitude = position.coords.longitude;
+
+	  var img_url='http://maps.googleapis.com/maps/api/staticmap?center='
+	  +latlon+'&zoom=14&size=400x300&sensor=false';
+			
+	  document.getElementById('map_canvas').innerHTML='<img src=http://maps.googleapis.com/maps/api/staticmap?center='+latlon+'&zoom=14&size=400x300&sensor=false>';
+
+	  //refresh to a blank list    
+    var currentItem = 0;	  
+	
+$.getJSON('https://api.foursquare.com/v2/venues/search?ll='+latitude+','+longitude+'&query=bar&limit=10&client_id=2POUFAUU4ZBJ2MTDOY3S2YHR2NIT52FYW0LUTPHBMNTJFJNQ&client_secret=YFDZI1YWV3ZI5S5SPM2DZJEQIEBPIDJ5XFZBWTIKIQZVQNYM&v=20120101',
+	    function(data) {
+	       $.each(data.response.venues, function(i,venues){
+	         console.log(data.response.venues);
+				   $('#resultsList').append('<li><a href="#display" data-transition="slide">' + venues.name + '</a></li>')
+	       });
+	       $('#resultsList').listview('refresh');
+	       $('#resultsList li').click(function() {
+             currentItem = $(this).index();
+         });	  
+         $('#display').on('pagebeforeshow', function() {
+               $(this).find('[data-role=header] .ui-title').text(data.response.venues[currentItem].name);
+               $('#definition').text(data.response.venues[currentItem].location.address);
+          });     
+		});
+		
+		
+	  } //end showPosition()
+
+
+	function showError(error)
+	  {
+	  switch(error.code) 
+	    {
+	    case error.PERMISSION_DENIED:
+	      x.innerHTML='User denied the request for Geolocation.'
+	      break;
+	    case error.POSITION_UNAVAILABLE:
+	      x.innerHTML='Location information is unavailable.'
+	      break;
+	    case error.TIMEOUT:
+	      x.innerHTML='The request to get user location timed out.'
+	      break;
+	    case error.UNKNOWN_ERROR:
+	      x.innerHTML='An unknown error occurred.'
+	      break;
+	    }
+	  }
+
+
+    
+</script>
 
 
 <!-- Start of Judah page -->
