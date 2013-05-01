@@ -118,9 +118,33 @@
 <div data-role="page" id="display">
     <div data-role="header">
       <a data-role="button" data-rel="back" data-icon="back">Back</a>
-         <h3>Name Goes Here</h3>
+         <h3 id="places-name">Name Goes Here</h3>
       <a href="#" data-icon="check" class="" id="save-btn">Save</a>
     </div>
+
+	<script type="text/javascript" charset="utf-8">
+	
+		$("#save-btn").on( "click", function( event ){
+			alert("Saved to your favorites!");	
+			
+			var car = {};
+			car.wheels = 4;
+			car.doors = 2;
+			car.sound = 'vroom';
+			car.name = $("#display h3#places-name").html();
+			
+			//console.log( car );
+			localStorage.setItem( 'car' + $("#display h3").html(), JSON.stringify(car) );
+			//console.log( JSON.parse( localStorage.getItem(car)));
+			
+			// for (var i = 0; i < localStorage.length; i++){
+			//     $('li').append(localStorage.getItem(localStorage.key(i)));
+			// }
+			
+		});
+		
+	</script>
+
     <div data-role="content">
       
         <div class="ui-grid-a">
@@ -146,6 +170,7 @@
     </div>
     
     <script type="text/javascript" charset="utf-8">
+
       var date = new Date();
       var weekday=new Array(7);
 			weekday[0]="Sunday";
@@ -247,28 +272,7 @@ $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+latitude+','+longitu
 		<h1>Judah</h1>
 	    <a href="#" data-icon="check" class="" id="save-btn">Save</a>
 		
-		<script type="text/javascript" charset="utf-8">
-		
-			// $("#save-btn").on( "click", function( event ){
-			// 	alert("Saved to your favorites!");	
-			// 	
-			// 	var car = {};
-			// 	car.wheels = 4;
-			// 	car.doors = 2;
-			// 	car.sound = 'vroom';
-			// 	car.name = 'Lightning McQueen';
-			// 	
-			// 	console.log( car );
-			// 	localStorage.setItem( 'car', JSON.stringify(car) );
-			// 	console.log( JSON.parse( localStorage.getItem( 'car' ) ) );
-			// 	
-			// 	for (var i = 0; i < localStorage.length; i++){
-			// 	    $('li').append(localStorage.getItem(localStorage.key(i)));
-			// 	}
-			// 	
-			// });
-			
-		</script>
+
 		
 	</div><!-- /header -->
 
