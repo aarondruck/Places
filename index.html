@@ -91,14 +91,8 @@
 
 	<div data-role="content">
 		
-		<ul data-role="listview" data-filter="true" data-filter-placeholder="Search all my favorites..." data-inset="false">
-			
-			<script type="text/javascript" charset="utf-8">
-				//$("li").html(localStorage.getItem("name"));
-				
-			</script>
-			
-		    <li id="all-my-favorites"><a href="#">Apple</a></li>
+		<ul id="all-my-favorites" data-role="listview" data-filter="true" data-filter-reveal="false" data-filter-placeholder="Search all my favorites...">			
+
 		</ul>
 		
 	</div><!-- /content -->
@@ -135,11 +129,13 @@
 			
 			//console.log( car );
 			localStorage.setItem( 'car' + $("#display h3").html(), JSON.stringify(car) );
-			//console.log( JSON.parse( localStorage.getItem(car)));
+			console.log( JSON.parse( localStorage.getItem(car)));
 			
-			// for (var i = 0; i < localStorage.length; i++){
-			//     $('li').append(localStorage.getItem(localStorage.key(i)));
-			// }
+			var result = JSON.parse(localStorage.getItem('car')); 
+			
+			for (var i = 0; i < localStorage.length; i++){
+			    $('ul#all-my-favorites').append('<li><a href="#">' + localStorage.getItem(localStorage.key(i))+'</a></li>');
+			}
 			
 		});
 		
@@ -262,6 +258,17 @@ $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+latitude+','+longitu
 
     
 </script>
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!-- Start of Judah page -->
