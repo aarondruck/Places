@@ -118,24 +118,30 @@
 
 	<script type="text/javascript" charset="utf-8">
 	
+	  counter = 0;
+	
 		$("#save-btn").on( "click", function( event ){
 			alert("Saved to your favorites!");	
 			
-			var car = {};
-			car.wheels = 4;
-			car.doors = 2;
-			car.sound = 'vroom';
-			car.name = $("#display h3#places-name").html();
+			
+			var places = {};
+			places.id = counter++;
+			places.name = $("#display h3#places-name").html();
 			
 			//console.log( car );
-			localStorage.setItem( 'car' + $("#display h3").html(), JSON.stringify(car) );
-			console.log( JSON.parse( localStorage.getItem(car)));
+			localStorage.setItem( 'places' + places.id, JSON.stringify(places) );
+			//console.log( JSON.parse( localStorage.getItem(car)));
 			
-			var result = JSON.parse(localStorage.getItem('car')); 
+			//var result = JSON.parse(localStorage.getItem('car')); 
 			
-			for (var i = 0; i < localStorage.length; i++){
-			    $('ul#all-my-favorites').append('<li><a href="#">' + localStorage.getItem(localStorage.key(i))+'</a></li>');
-			}
+      // for(var i=0;i<result.length;i++) {
+      //           var item = result[i];
+      //           $('element').val(item.name);
+      //       }
+			
+      for (var i = 0; i < localStorage.length; i++){
+          $('ul#all-my-favorites').append('<li><a href="#">' + localStorage.getItem(localStorage.key(i))+'</a></li>');
+      }
 			
 		});
 		
