@@ -117,30 +117,22 @@
     </div>
 
 	<script type="text/javascript" charset="utf-8">
-	
-	  counter = 0;
-	
+
 		$("#save-btn").on( "click", function( event ){
 			alert("Saved to your favorites!");	
 			
-			
 			var places = {};
-			places.id = counter++;
+			places.id = 1;
 			places.name = $("#display h3#places-name").html();
 			
-			//console.log( car );
-			localStorage.setItem( 'places' + places.id, JSON.stringify(places) );
-			//console.log( JSON.parse( localStorage.getItem(car)));
-			
-			//var result = JSON.parse(localStorage.getItem('car')); 
-			
-      // for(var i=0;i<result.length;i++) {
-      //           var item = result[i];
-      //           $('element').val(item.name);
-      //       }
+      localStorage.setItem( 'places', JSON.stringify(places) );
 			
       for (var i = 0; i < localStorage.length; i++){
-          $('ul#all-my-favorites').append('<li><a href="#">' + localStorage.getItem(localStorage.key(i))+'</a></li>');
+        
+          //console.log("test" + JSON.parse(localStorage.getItem('places')));
+          var result = JSON.parse( localStorage.getItem(localStorage.key(i)));
+          
+          $('ul#all-my-favorites').append('<li><a href="#' + result.name + '">' + result.name +'</a></li>');
       }
 			
 		});

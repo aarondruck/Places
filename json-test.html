@@ -1,0 +1,37 @@
+<!doctype html>
+<html><head><meta charset="utf-8" />
+    <title>json-test</title>
+    <link
+        rel="stylesheet"
+        href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+    <script src="http://code.jquery.com/jquery-1.6.4.min.js">
+    </script>
+    <script type="text/javascript">
+
+       localStorage["results"] = JSON.stringify([{"id":"item-1","href":"google.com","icon":"google.com"},  
+       {"id":"item-2","href":"youtube.com","icon":"youtube.com"},  
+       {"id":"item-3","href":"google.com","icon":"google.com"},  
+       {"id":"item-4","href":"google.com","icon":"google.com"},  
+       {"id":"item-5","href":"youtube.com","icon":"youtube.com"},  
+       {"id":"item-6","href":"asos.com","icon":"asos.com"},  
+       {"id":"item-7","href":"google.com","icon":"google.com"},  
+       {"id":"item-8","href":"mcdonalds.com","icon":"mcdonalds.com"}]) ;
+       //alert(localStorage["results"]);
+       function getItemHrefById(json, itemId){ 
+           return json.filter(function(testItem){return testItem.id == itemId;})[0].href; 
+       } 
+
+       var json = JSON.parse(localStorage["results"]);
+       var href = getItemHrefById(json, "item-3");
+
+       $("#res").html(href);
+       alert(localStorage.getItem("results"));
+       localStorage.removeValue("results");
+
+    </script>
+    
+</head>
+<body>
+    <div id="res">test1</div>
+</body>
+</html>
