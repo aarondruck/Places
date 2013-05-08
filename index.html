@@ -108,6 +108,53 @@
 </div><!-- /page -->
 
 
+
+<!-- favorited -->
+<div data-role="page" id="favorited">
+    <div data-role="header">
+      <a data-role="button" data-rel="back" data-icon="back">Back</a>
+         <h3 id="places-name">Name Goes Here</h3>
+      <a href="#" data-icon="check" class="">Save</a>
+    </div>
+
+	<script type="text/javascript" charset="utf-8">
+		
+		var newCurrentItem = 0;
+		$('ul#all-my-favorites li').click(function() {
+			alert("newCurrentItem");
+        });
+
+
+	</script>
+
+    <div data-role="content">
+      
+        <div class="ui-grid-a">
+      	    <div class="ui-block-a">
+      			<div style="height:100px">
+      				<p><span class="locationName">Judah Bar</span><br/><div>Location goes here</div> <span class="locationPrice">$</span></p>
+					<p id="definito">a</p>
+      			</div>
+      		</div>
+      	    <div class="ui-block-b">
+      			<div style="height:100px">
+      				<p>Your favorite on<br/>
+      					<span id="dayofweek"></span>s around 
+      					<span id="timeofday"></span>
+      				</p>
+      			</div>
+      		</div>
+      	</div><!-- /grid-a -->
+
+      	
+    </div>
+</div>
+    <!-- end #favorited -->
+
+
+
+
+
 <!-- display -->
 <div data-role="page" id="display">
     <div data-role="header">
@@ -118,32 +165,48 @@
 
 	<script type="text/javascript" charset="utf-8">
 
-		$("#save-btn").on( "click", function( event ){
-			alert("Saved to your favorites!");	
+	loadListFavorites();
+
+	function loadListFavorites() {
+		  var places = {};
+		  places.id = 1;
+		  places.name = $("#display h3#places-name").html();
 			
-			var places = {};
-			places.id = 1;
-			places.name = $("#display h3#places-name").html();
-			
-      localStorage.setItem( 'places' + $("#display h3").html(), JSON.stringify(places) );	
+	      localStorage.setItem( 'places' + $("#display h3").html(), JSON.stringify(places) );	
     
-      $('#all-my-favorites').empty(); 
-      for (var i = 0; i < localStorage.length; i++){         
-          var result = JSON.parse( localStorage.getItem(localStorage.key(i)));          
-          $('ul#all-my-favorites').append('<li><a href="#" data-transition="slide">' + result.name +'</a></li>');
-      }
-      //refresh the listview
-      $('#all-my-favorites').listview('refresh');
-      
-            
-		});
+	      $('#all-my-favorites').empty();
+		  for (var i = 0; i < localStorage.length; i++){         
+	      	var result = JSON.parse( localStorage.getItem(localStorage.key(i)));          
+	      	$('ul#all-my-favorites').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
+	      }
+	}
 
-		function favesAll(){
-		    //alert("test");
-		    
+	  $("#save-btn").on( "click", function( event ){
+		  alert("Saved to your favorites!");	
+			
+		  var places = {};
+		  places.id = 1;
+		  places.name = $("#display h3#places-name").html();
+			
+	      localStorage.setItem( 'places' + $("#display h3").html(), JSON.stringify(places) );	
+    
+	      $('#all-my-favorites').empty(); 
+	
+		  
+		
+	      for (var i = 0; i < localStorage.length; i++){         
+	      	var result = JSON.parse( localStorage.getItem(localStorage.key(i)));          
+	      	$('ul#all-my-favorites').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
+	      }
+	
+	      //refresh the listview
+	      $('#all-my-favorites').listview('refresh');
+	
 
-		    
-		};
+		  
+	  });
+
+
 
 		
 		
@@ -172,7 +235,8 @@
       
         
     </div>
-    
+    <!-- end #display -->
+
     <script type="text/javascript" charset="utf-8">
 
       var date = new Date();
@@ -237,7 +301,7 @@ $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+latitude+','+longitu
          $('#display').on('pagebeforeshow', function() {
                $(this).find('[data-role=header] .ui-title').text(data.response.venues[currentItem].name);
                $('#definition').text(data.response.venues[currentItem].location.address);
-          });     
+         });     
 		});
 		
 		
