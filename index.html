@@ -114,25 +114,15 @@
     <div data-role="header">
       <a data-role="button" data-rel="back" data-icon="back">Back</a>
          <h3 id="places-name">Name Goes Here</h3>
-      <a href="#" data-icon="check" class="">Save</a>
+      <a href="#" data-icon="delete" class="">Delete</a>
     </div>
-
-	<script type="text/javascript" charset="utf-8">
-		
-		var newCurrentItem = 0;
-		$('ul#all-my-favorites li').click(function() {
-			alert("newCurrentItem");
-        });
-
-
-	</script>
-
+    
     <div data-role="content">
       
         <div class="ui-grid-a">
       	    <div class="ui-block-a">
       			<div style="height:100px">
-      				<p><span class="locationName">Judah Bar</span><br/><div>Location goes here</div> <span class="locationPrice">$</span></p>
+      				<p><span class="locationName">Judah Bar</span><br/><div id="FavoritedlocationName">Location goes here</div> <span class="locationPrice">$</span></p>
 					<p id="definito">a</p>
       			</div>
       		</div>
@@ -151,66 +141,71 @@
 </div>
     <!-- end #favorited -->
 
-
-
-
-
 <!-- display -->
 <div data-role="page" id="display">
     <div data-role="header">
       <a data-role="button" data-rel="back" data-icon="back">Back</a>
          <h3 id="places-name">Name Goes Here</h3>
-      <a href="#" data-icon="check" class="" id="save-btn">Save</a>
+      <a href="#" data-icon="check" onClick="saveButton();" class="">Save</a>
     </div>
 
 	<script type="text/javascript" charset="utf-8">
 
-	loadListFavorites();
+	//loadListFavorites();
+	
 
 	function loadListFavorites() {
-		  var places = {};
-		  places.id = 1;
-		  places.name = $("#display h3#places-name").html();
-			
-	      localStorage.setItem( 'places' + $("#display h3").html(), JSON.stringify(places) );	
-    
-	      $('#all-my-favorites').empty();
+	    $('#all-my-favorites').empty();
 		  for (var i = 0; i < localStorage.length; i++){         
 	      	var result = JSON.parse( localStorage.getItem(localStorage.key(i)));          
 	      	$('ul#all-my-favorites').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
-	      }
+	    }
 	}
 
-	  $("#save-btn").on( "click", function( event ){
-		  alert("Saved to your favorites!");	
-			
-		  var places = {};
-		  places.id = 1;
-		  places.name = $("#display h3#places-name").html();
-			
-	      localStorage.setItem( 'places' + $("#display h3").html(), JSON.stringify(places) );	
+  var placeIDnumber = 0;
+      
+  function saveButton() {
+      alert("Saved to your favorites!");	
+
+  	  placeIDnumber = placeIDnumber + 1;
+  	  var places = {};
+  	  places.id = placeIDnumber;
+  	  places.name = $("#display h3#places-name").html();
+  	  places.location = $('#definition').html();
+      localStorage.setItem( 'places' + $("#display h3").html(), JSON.stringify(places) );	
+  
+      $('#all-my-favorites').empty(); 
+
+      for (var i = 0; i < localStorage.length; i++){         
+        var result = JSON.parse( localStorage.getItem(localStorage.key(i)));          
+        $('ul#all-my-favorites').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
+      }
     
-	      $('#all-my-favorites').empty(); 
-	
-		  
+      //refresh the listview
+      $('#all-my-favorites').listview('refresh');
+      
+      //doesnt work the first time you save, but works the 2nd time...  has noName the first time you save
+      setFavoriteList();
+  }  
+  
+  // Something is up with this one.  If i comment it out, it works fine  Maybe order of operations?
+  //setFavoriteList();
+  	
+	function setFavoriteList() {
+	  var newcurrentItem = 0;
+    
+    $('#all-my-favorites li').click(function() {
+        placetext = $(this).index();
+    });	  
+    
+    $('#favorited').on('pagebeforeshow', function() {
+       var favoritedName = JSON.parse( localStorage.getItem(localStorage.key(placetext)));
+       $(this).find('[data-role=header] .ui-title').text(favoritedName.name);
+       $('#FavoritedlocationName').text(favoritedName.location);
+    });
+	}
 		
-	      for (var i = 0; i < localStorage.length; i++){         
-	      	var result = JSON.parse( localStorage.getItem(localStorage.key(i)));          
-	      	$('ul#all-my-favorites').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
-	      }
-	
-	      //refresh the listview
-	      $('#all-my-favorites').listview('refresh');
-	
-
-		  
-	  });
-
-
-
-		
-		
-	</script>
+	</script>	
 
     <div data-role="content">
       
@@ -299,8 +294,8 @@ $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+latitude+','+longitu
              currentItem = $(this).index();
          });	  
          $('#display').on('pagebeforeshow', function() {
-               $(this).find('[data-role=header] .ui-title').text(data.response.venues[currentItem].name);
-               $('#definition').text(data.response.venues[currentItem].location.address);
+           $(this).find('[data-role=header] .ui-title').text(data.response.venues[currentItem].name);
+           $('#definition').text(data.response.venues[currentItem].location.address);
          });     
 		});
 		
