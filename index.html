@@ -168,19 +168,27 @@
     </div>
 </div>
     <!-- end #favorited -->
+    
+    
+    <!-- <a href="#popupSaved" data-rel="popup">Saved!</a> -->
+
+
+    
 
 <!-- display -->
 <div data-role="page" id="display">
     <div data-role="header">
       <a data-role="button" data-rel="back" data-icon="back">Back</a>
          <h3 id="places-name">Name Goes Here</h3>
-      <a href="#" data-icon="check" onClick="saveButton();" class="" id="Savebtn">Save</a>
+      <a href="#popupSaved" data-icon="check" onClick="saveButton();" class="" id="Savebtn" data-rel="popup" data-position-to="window" data-transition="fade">Save</a>
     </div>
 
 	<script type="text/javascript" charset="utf-8">
 
 	loadListFavorites();
 	setFavoriteList();
+	
+	
 	
 	function deleteFave() {
 	  alert("deleted!");
@@ -205,7 +213,7 @@
   var placeIDnumber = 0;
       
   function saveButton() {
-      alert("Saved to your favorites!");	
+      //alert("Saved to your favorites!");	
 
   	  placeIDnumber = placeIDnumber + 1;
   	  var places = {};
@@ -228,6 +236,9 @@
     
       //doesnt work the first time you save, but works the 2nd time...  has noName the first time you save
       setFavoriteList();
+      
+      //$('#popupSaved').popup("close").delay(800);
+      
   }  
   
   // Something is up with this one.  If i comment it out, it works fine  Maybe order of operations?
@@ -257,6 +268,11 @@
 	</script>	
 
     <div data-role="content"> 
+      
+      <!-- Saved dialog -->
+      <div data-role="popup" id="popupSaved">
+        <p>Saved!<p>
+      </div>
       
       <ul data-role="listview">
         <li>You like <b><span id="nameofPlace"></span></b></li>
