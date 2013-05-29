@@ -166,22 +166,21 @@
 	
 	function loadListFavorites() {
 	
-	    var currentdate = new Date();
+      var currentdate = new Date();
       var currentHour = currentdate.getHours();
       var currentnextHour = currentdate.getHours()+1;
       var currentdd = "am";
-			
-			if (currentHour > 12) {
+      
+      if (currentHour > 12) {
           currentHour -= 12;
       } else if (currentHour === 0) {
          currentHour = 12;
       }
       if (currentnextHour > 12) {
           currentnextHour -= 12;
+          currentdd = "pm";
       } else if (currentnextHour === 0) {
          currentnextHour = 12;
-      } else if (currentnextHour = 12) {
-         currentdd = "pm";
       }
       
       var currentTime = currentHour+"-"+currentnextHour + currentdd;
@@ -193,10 +192,8 @@
 	      	
 	      	//load only localstorage ones with the same timestamp as now
           if(result.timeOfDay == currentTime) {
-            alert("success");
+            $('ul#all-my-favorites').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
           }
-	      	      
-	      	$('ul#all-my-favorites').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
     	    
 	    }
 	    
@@ -205,6 +202,26 @@
   var placeIDnumber = 0;
       
   function saveButton() {
+    
+      var currentdate = new Date();
+      var currentHour = currentdate.getHours();
+      var currentnextHour = currentdate.getHours()+1;
+      var currentdd = "am";
+
+      if (currentHour > 12) {
+          currentHour -= 12;
+      } else if (currentHour === 0) {
+         currentHour = 12;
+      }
+      if (currentnextHour > 12) {
+          currentnextHour -= 12;
+          currentdd = "pm";
+      } else if (currentnextHour === 0) {
+         currentnextHour = 12;
+      }
+
+      var currentTime = currentHour+"-"+currentnextHour + currentdd;
+      //alert(currentTime);
       
   	  placeIDnumber = placeIDnumber + 1;
   	  var places = {};
@@ -220,7 +237,11 @@
 
       for (var i = 0; i < localStorage.length; i++){         
         var result = JSON.parse( localStorage.getItem(localStorage.key(i)));          
-        $('ul#all-my-favorites').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
+        
+        if(result.timeOfDay == currentTime) {
+          $('ul#all-my-favorites').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
+        }
+      
       }
     
       //if Saved, change the Save button to activated
@@ -240,8 +261,15 @@
 	  var newcurrentItem = 0;
     
     $('#all-my-favorites li').click(function() {
-        placetext = $(this).index();
+         
+        placetext = $(this).text();
+        //placetext = $(this).index();
+        alert(placetext);
+        
+        
     });	  
+    
+    //localStorage.setItem( 'places' + $("#display h3").html(), JSON.stringify(places) );
     
     $('#favorited').on('pagebeforeshow', function() {
        var favoritedName = JSON.parse( localStorage.getItem(localStorage.key(placetext)));
@@ -296,10 +324,17 @@
 			
 			if (hour > 12) {
           hour -= 12;
-          dd = "pm";
       } else if (hour === 0) {
          hour = 12;
       }
+      
+      if (nexthour > 12) {
+          nexthour -= 12;
+          dd = "pm";
+      } else if (nexthour === 0) {
+         nexthour = 12;
+      }
+      
 			$("#timeofday").html(hour+"-"+nexthour+dd);
 			
     </script>
