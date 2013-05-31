@@ -258,30 +258,46 @@
   //setFavoriteList();
   	
 	function setFavoriteList() {
-	  var newcurrentItem = 0;
+	  	
+	var newcurrentItem = 0;
     
-    $('#all-my-favorites li').click(function() {
-         
-        placetext = $(this).text();
-        //placetext = $(this).index();
-        alert(placetext);
+		// click the list item, which is a specific bar
+	    $('#all-my-favorites li').click(function() {
+         				
+			// get specific name of Bar from the list item
+			listitemText = $(this).text();
+			
+			// OR manually name the list item. example here is "Fireside Bar" for testing purposes
+			//listitemText = "Fireside Bar";
+			
+			// combine the strings, so i can search localstorage for the relevant key item
+			placesText = "places" + listitemText;
+			//alert(placesText);
+			// returns "placesFireside Bar" or  "places(barname from listitem)"
+			
+	    });	  
         
-        
-    });	  
+		// go to the new page, which should show content from the relevant key item
+	    $('#favorited').on('pagebeforeshow', function() {
+		
+		   // test to see if placesText is a string
+		   alert(jQuery.type( placesText ) === "string");
+		   // returns TRUE
+		   
+		   // find the relevant keyitem from localstorage, and name the object favoritedName
+	       var favoritedName = JSON.parse( localStorage.getItem(placesText));
+		   alert(favoritedName);
+		   // returns NULL
+		
+	       $(this).find('[data-role=header] .ui-title').text(favoritedName.name);
+	       $('#FavoritedplaceName').text(favoritedName.name);
+	       $('#FavoritedlocationName').text(favoritedName.location);
+	       $('#FavoritedtimeofDay').text(favoritedName.timeOfDay);
+	       $('#FavoriteddayofWeek').text(favoritedName.dayofWeek);
+	    });
     
-    //localStorage.setItem( 'places' + $("#display h3").html(), JSON.stringify(places) );
-    
-    $('#favorited').on('pagebeforeshow', function() {
-       var favoritedName = JSON.parse( localStorage.getItem(localStorage.key(placetext)));
-       $(this).find('[data-role=header] .ui-title').text(favoritedName.name);
-       $('#FavoritedplaceName').text(favoritedName.name);
-       $('#FavoritedlocationName').text(favoritedName.location);
-       $('#FavoritedtimeofDay').text(favoritedName.timeOfDay);
-       $('#FavoriteddayofWeek').text(favoritedName.dayofWeek);
-    });
-    
-    //refresh the listview
-    $('#all-my-favorites').listview('refresh');
+	    //refresh the listview
+	    $('#all-my-favorites').listview('refresh');
     
 	}
 		
