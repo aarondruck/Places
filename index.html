@@ -148,8 +148,13 @@
 	setFavoriteList();
 	
 	function deleteFave() {
-	  //alert("deleted!");
-	  var itemKey = $("#places-name").html();
+	  alert("deleted!");
+	
+	  // need to fix this.  Now itemKey thinks it's placesNAME Name instead of placesNAMEname
+	  var itemKey = $("#places-name").html().replace(/ /g,'');
+	  console.log(escape(itemKey));
+	  //console.log("test" + newNameNoSpace);
+	
 	  localStorage.removeItem('places'+ itemKey);
 	  $.mobile.changePage( "#favorites-all", { reverse: true, transition: "slide"} );
 	  //refresh the items
@@ -230,7 +235,12 @@
   	  places.location = $('#placeLocation').html();
   	  places.timeOfDay = $('#timeofday').html();
   	  places.dayofWeek = $('#dayofweek').html();
-      localStorage.setItem( 'places' + $("#display h3").html(), JSON.stringify(places) );	
+
+	  var newNameNoSpace = $("#display h3").html().replace(/ /g,'');
+	  //console.log(escape(newNameNoSpace));
+	  //console.log("test" + newNameNoSpace);
+		
+      localStorage.setItem( 'places' + newNameNoSpace, JSON.stringify(places) );	
       //$.mobile.changePage( "#places", { reverse: true, transition: "slide"} );
   
       $('#all-my-favorites').empty(); 
@@ -265,15 +275,29 @@
 	    $('#all-my-favorites li').click(function() {
          				
 			// get specific name of Bar from the list item
-			listitemText = $(this).text();
+			var nbsp = unescape("%a0");
+			listitemText = $(this).text().replace(nbsp, '');
+			newlistitemText = listitemText.replace(/ /g,'');
+			
+			
+			//alert("space" + nbsp);
+			console.log(escape(newlistitemText));
+			//var newNameNoSpace = $("#display h3").html().replace(/ /g,'');
 			
 			// OR manually name the list item. example here is "Fireside Bar" for testing purposes
 			//listitemText = "Fireside Bar";
 			
 			// combine the strings, so i can search localstorage for the relevant key item
-			placesText = "places" + listitemText;
+			placesText = "places" + newlistitemText;
+
+			
 			//alert(placesText);
 			// returns "placesFireside Bar" or  "places(barname from listitem)"
+			console.log("one: " + placesText);
+			
+			//&#160;
+			//U+00a0
+			//$this.text(t.replace('00a0',''));
 			
 	    });	  
         
@@ -281,12 +305,14 @@
 	    $('#favorited').on('pagebeforeshow', function() {
 		
 		   // test to see if placesText is a string
-		   alert(jQuery.type( placesText ) === "string");
+		   //alert(jQuery.type( placesText ) === "string");
 		   // returns TRUE
 		   
 		   // find the relevant keyitem from localstorage, and name the object favoritedName
 	       var favoritedName = JSON.parse( localStorage.getItem(placesText));
-		   alert(favoritedName);
+		   //alert(favoritedName);
+		   //placesText.replace(/ /g,'');
+		   console.log("two: " +placesText);
 		   // returns NULL
 		
 	       $(this).find('[data-role=header] .ui-title').text(favoritedName.name);
