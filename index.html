@@ -23,7 +23,7 @@
 
 
 
-  <!-- Start of Favorites ALL page -->
+  <!-- Start of Favorites NOW page -->
   <div data-role="page" id="favorites-all">
 
     <div data-role="panel" id="mypanel" data-position="left" data-display="push">
@@ -32,21 +32,74 @@
 
   	<div data-role="header" data-position="fixed">
   	  <a href="#mypanel" data-icon="bars" class="ui-btn-left" data-position="left" data-iconpos="notext">Panel</a>
-  		<h1>Favorites</h1>
+  		<h1>My favorites</h1>
   	</div><!-- /header -->
 
   	<div data-role="content">
 
-      <!-- <p>
+      <p>
         <center>
           <div data-role="controlgroup" data-type="horizontal" data-mini="true">
-          <a href="#favorites" data-role="button">Now</a>
-          <a onClick="favesAll();" href="#" data-role="button" class="ui-btn-active ui-state-persist">All</a>
+            <a onClick="favesAll();" href="#" data-role="button" class="ui-btn-active ui-state-persist">Now</a>
+            <a href="#favorites" data-role="button" data-transition="none">All</a>
           </div>
         </center>
+      </p>
+      <!-- <p>
+      <div data-role="controlgroup" data-type="horizontal">
+        <a href="index.html" data-role="button">Now</a>
+        <a href="index.html" data-role="button">All</a>
+      </div>
       </p> -->
-
+      
   		<ul id="all-my-favorites" data-role="listview" data-filter="true" data-filter-reveal="false" data-filter-placeholder="Search my favorites..."></ul>
+  		
+  		<p class="noFavoritesLoaded" style="text-align:center;font-size:20px;padding-top:60px;"></p>
+  		
+
+  	</div><!-- /content -->
+
+  	<div data-role="footer" data-id="favorites" data-position="fixed" class="nav-glyphish-example">
+  		<div data-role="navbar" class="nav-glyphish-example">
+  			<ul>
+  				<li><a href="#places" data-transition="slideup" id="beer" data-icon="arrow-u" onclick='getLocation()'>Places</a></li>
+  				<!-- <li><a href="#favorites-all" class="ui-btn-active ui-state-persist" id="beer" data-icon="custom">Favorites</a></li> -->
+  			</ul>
+  		</div><!-- /navbar -->
+  	</div><!-- /footer -->
+
+  </div><!-- /page -->
+  
+  <!-- Start of Favorites ALL page -->
+  <div data-role="page" id="favorites">
+
+    <div data-role="panel" id="mypanel" data-position="left" data-display="push">
+        Related content...
+    </div><!-- /panel -->
+
+  	<div data-role="header" data-position="fixed">
+  	  <a href="#mypanel" data-icon="bars" class="ui-btn-left" data-position="left" data-iconpos="notext">Panel</a>
+  		<h1>My favorites</h1>
+  	</div><!-- /header -->
+
+  	<div data-role="content">
+
+      <p>
+        <center>
+          <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+            <a onClick="favesAll();" href="#favorites-all" data-role="button" data-transition="none">Now</a>
+            <a href="#favorites" data-role="button" class="ui-btn-active ui-state-persist">All</a>
+          </div>
+        </center>
+      </p>
+      <!-- <p>
+      <div data-role="controlgroup" data-type="horizontal">
+        <a href="index.html" data-role="button">Now</a>
+        <a href="index.html" data-role="button">All</a>
+      </div>
+      </p> -->
+      
+  		<ul id="all-my-favorites2" data-role="listview" data-filter="true" data-filter-reveal="false" data-filter-placeholder="Search my favorites..."></ul>
   		
   		<p class="noFavoritesLoaded" style="text-align:center;font-size:20px;padding-top:60px;"></p>
   		
@@ -84,7 +137,7 @@
 
           <ul data-role="listview">
             <li>You like <b><span id="FavoritedplaceName"></span></b></li>
-            <li>on <b><span id="FavoriteddayofWeek"></span>s</b></li>
+            <li >on <b><span id="FavoriteddayofWeek"></span>s</b></li>
             <li>between <b><span id="FavoritedtimeofDay"></span></b></li>
             <li>located at <b><span id="FavoritedlocationName"></span></b></li>
           </ul>
@@ -199,6 +252,8 @@
           if(result.timeOfDay == currentTime) {
             $('ul#all-my-favorites').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
           }
+          
+          $('ul#all-my-favorites2').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
     	    
 	    }
 	    
