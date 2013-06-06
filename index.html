@@ -62,7 +62,7 @@
   	<div data-role="footer" data-id="favorites" data-position="fixed" class="nav-glyphish-example">
   		<div data-role="navbar" class="nav-glyphish-example">
   			<ul>
-  				<li><a href="#places" data-transition="slideup" id="beer" data-icon="arrow-u" onclick='getLocation()'>Places</a></li>
+  				<li><a href="#places" data-transition="slideup" id="beer" data-icon="arrow-u" onclick='getLocation();'>Places</a></li>
   				<!-- <li><a href="#favorites-all" class="ui-btn-active ui-state-persist" id="beer" data-icon="custom">Favorites</a></li> -->
   			</ul>
   		</div><!-- /navbar -->
@@ -130,7 +130,7 @@
       <div data-role="header">
         <a data-role="button" data-rel="back" data-icon="back">Back</a>
            <h3 id="places-name">Name Goes Here</h3>
-        <a href="#popupDeleted" data-icon="delete" class="" data-position-to="window" data-rel="popup" data-transition="fade" onClick="deleteFave();">Delete</a>
+        <!-- <a href="#popupDeleted" data-icon="delete" class="" data-position-to="window" data-rel="popup" data-transition="fade" onClick="deleteFave();">Delete</a> -->
       </div>
 
       <div data-role="content">
@@ -139,7 +139,8 @@
             <li>You like <b><span id="FavoritedplaceName"></span></b></li>
             <li >on <b><span id="FavoriteddayofWeek"></span>s</b></li>
             <li>between <b><span id="FavoritedtimeofDay"></span></b></li>
-            <li>located at <b><span id="FavoritedlocationName"></span></b></li>
+            <li>Located at <b><span id="FavoritedlocationName"></span></b></li>
+			<li><button onClick="deleteFave();">Delete</button></li>
           </ul>
 
       </div>
@@ -155,7 +156,7 @@
 	<div data-role="header" data-position="fixed" data-tap-toggle="false">
 	  <a href="#favorites-all" data-icon="arrow-d" class="ui-btn-left" data-transition="slidedown" data-iconpos="notext">Back</a>
 		<h1>Favorite a place</h1>
-		<a href="#" data-icon="refresh" onclick='getLocation()' class="ui-btn-right" data-iconpos="notext">Refresh</a>
+		<a href="#" data-icon="refresh" onclick='getLocation();' class="ui-btn-right" data-iconpos="notext">Refresh</a>
 	    
 	</div><!-- /header -->
 
@@ -192,7 +193,7 @@
     <div data-role="header">
       <a data-role="button" data-rel="back" data-icon="back">Back</a>
          <h3 id="places-name">Name Goes Here</h3>
-      <a href="#popupSaved" data-icon="check" onClick="saveButton();" class="" id="Savebtn" data-position-to="window" data-rel="popup" data-transition="fade">Save</a>
+      <!-- <a href="#popupSaved" data-icon="check" onClick="saveButton();" class="" id="Savebtn" data-position-to="window" data-rel="popup" data-transition="fade">Save</a> -->
     </div>
 
 	<script type="text/javascript" charset="utf-8">
@@ -213,10 +214,13 @@
 	  //refresh the items
 	  loadListFavorites();
 	  $('#all-my-favorites').listview('refresh');
+	  $('#all-my-favorites2').listview('refresh');
 	  setFavoriteList();
 	  if (localStorage.length === 0) {
-    	 	$("p.noFavoritesLoaded").html("You have no favorites!");
-    };
+    	 	$("p.noFavoritesLoaded").html("You have no favorites.");
+      };
+
+	  	
 	  //need to reset the placeIDnumber i think...
 	}
 	
@@ -245,6 +249,7 @@
       //alert(currentTime);
 	    
 	    $('#all-my-favorites').empty();
+	    $('#all-my-favorites2').empty();
 		  for (var i = 0; i < localStorage.length; i++){         
 	      	var result = JSON.parse( localStorage.getItem(localStorage.key(i)));    
 	      	
@@ -299,6 +304,7 @@
       //$.mobile.changePage( "#places", { reverse: true, transition: "slide"} );
   
       $('#all-my-favorites').empty(); 
+	  $('#all-my-favorites2').empty(); 
 
       for (var i = 0; i < localStorage.length; i++){         
         var result = JSON.parse( localStorage.getItem(localStorage.key(i)));          
@@ -306,15 +312,19 @@
         if(result.timeOfDay == currentTime) {
           $('ul#all-my-favorites').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
         }
+
+		$('ul#all-my-favorites2').append('<li><a href="#favorited" data-transition="slide">' + result.name +'</a></li>');
+        
       
       }
     
       //if Saved, change the Save button to activated
       //$("#Savebtn").addClass("ui-btn-active");
     
+	  $("p.noFavoritesLoaded").html("");
       //doesnt work the first time you save, but works the 2nd time...  has noName the first time you save
       setFavoriteList();
-      $("p.noFavoritesLoaded").html("");
+      
       
       //$("#popupSaved").fadeOut('fast');
   }  
@@ -325,6 +335,36 @@
 	function setFavoriteList() {
 	  	
 	var newcurrentItem = 0;
+	
+		// click the list item, which is a specific bar
+	    $('#all-my-favorites2 li').click(function() {
+         				
+			// get specific name of Bar from the list item
+			var nbsp = unescape("%a0");
+			listitemText = $(this).text().replace(nbsp, '');
+			newlistitemText = listitemText.replace(/ /g,'');
+			
+			
+			//alert("space" + nbsp);
+			console.log(escape(newlistitemText));
+			//var newNameNoSpace = $("#display h3").html().replace(/ /g,'');
+			
+			// OR manually name the list item. example here is "Fireside Bar" for testing purposes
+			//listitemText = "Fireside Bar";
+			
+			// combine the strings, so i can search localstorage for the relevant key item
+			placesText = "places" + newlistitemText;
+
+			
+			//alert(placesText);
+			// returns "placesFireside Bar" or  "places(barname from listitem)"
+			console.log("one: " + placesText);
+			
+			//&#160;
+			//U+00a0
+			//$this.text(t.replace('00a0',''));
+			
+	    });
     
 		// click the list item, which is a specific bar
 	    $('#all-my-favorites li').click(function() {
@@ -372,13 +412,14 @@
 		
 	       $(this).find('[data-role=header] .ui-title').text(favoritedName.name);
 	       $('#FavoritedplaceName').text(favoritedName.name);
-	       $('#FavoritedlocationName').text(favoritedName.location);
+	       $('#FavoritedlocationName').html(favoritedName.location);    
 	       $('#FavoritedtimeofDay').text(favoritedName.timeOfDay);
 	       $('#FavoriteddayofWeek').text(favoritedName.dayofWeek);
 	    });
     
 	    //refresh the listview
 	    $('#all-my-favorites').listview('refresh');
+	    $('#all-my-favorites2').listview('refresh');
     
 	}
 		
@@ -391,11 +432,17 @@
         <p>Saved!<p>
       </div>
             
+	  <div class="ui-grid-a">
+		<div class="ui-block-a"><b><span id="dayofweek"></span>s</b></div>
+		<div class="ui-block-b"><b><span id="timeofday"></span></b></div>
+	  </div><!-- /grid-a -->
+
       <ul data-role="listview">
         <li>You like <b><span id="nameofPlace"></span></b></li>
         <li>on <b><span id="dayofweek"></span>s</b></li>
         <li>between <b><span id="timeofday"></span></b></li>
-        <li>located at <b><span id="placeLocation"></span></b></li>
+        <li>Located at <span id="placeLocation"></span></li>
+		<li><a href="#popupSaved" data-role="button" onClick="saveButton();" class="" id="Savebtn" data-position-to="window" data-rel="popup" data-transition="fade">Save</a></li>
       </ul>      
         
     </div>
@@ -451,8 +498,13 @@
 	    navigator.geolocation.getCurrentPosition(showPosition,showError);
 	    
 	    if (localStorage.length === 0) {
-      	 	$("p.noFavoritesLoaded").html("You have no favorites!");
-      };
+      	 	$("p.noFavoritesLoaded").html("You have no favorites.");
+      	};
+			
+		// if($('ul#all-my-favorites li').length == 0){
+		// 	//alert("empty");
+		// 	$("p.noFavoritesLoaded").html("You have no favorites nearby at this time.");
+		// 	  	};
 	    
 	    }
 	  else{x.innerHTML='Geolocation is not supported by this browser.';}
@@ -488,7 +540,7 @@ $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+latitude+','+longitu
          $('#display').on('pagebeforeshow', function() {
            $(this).find('[data-role=header] .ui-title').text(data.response.venues[currentItem].name);
            $('#nameofPlace').text(data.response.venues[currentItem].name);
-           $('#placeLocation').text(data.response.venues[currentItem].location.address);
+           $('#placeLocation').html("<a href='" + data.response.venues[currentItem].canonicalUrl + "' target=_blank>link</a>");
          });     
 		});
 		
