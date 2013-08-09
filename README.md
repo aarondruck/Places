@@ -6,3 +6,7 @@ A mobile web app that allows you to easily save your favorite places, based on t
 Prototype:
 
 http://aarondruck.github.io/Places/
+
+Deck:
+
+https://docs.google.com/presentation/d/1nP2MRxG1O4lWr3PJwmpgTYGajlh2fj-aS_g_duFOoVI/
